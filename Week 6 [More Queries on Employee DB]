@@ -1,1 +1,22 @@
+select m.ename, count(*)
+from emp e, emp m
+where e.mgr_no = m.emp_no group by m.ename
+having count(*) = (select max(my count) from (selct count(*) my count from emp group by mgr_no));
 
+select * from emp m
+where m.emp_no IN (select mgr_no from emp) and m.sel > (select avg(e.sal) from emp e where e.mgr_no = m.emp_no);
+
+select distinct m.mgr_no
+from emp e, emp m
+where e.mgr_no = m.mgr_no and e.dept_no = m.dept_no and e.emp_no IN (select distinct m.mgr_no from emp e, emp m
+                                          where e.mgr_no = m.mgr_no and e.dept_no = m.dept_no);
+
+select * from emp e, incenties
+where e.emp_no =  i.emp_no and 2=(select count(*) from incentives
+                                  where i.incentives_amount <= j.incentives_amount);
+
+select * from emp e
+where e.dept_no = (select e1.dept_no from emp e, where e1.emp_no = e.mgr_no);
+
+select distinct e.ename from emp e, incentives
+where (select max(sal + incentives_amount) from emp, incentives) >= ANY (select sal from emp e, where e.dept_no = e1.dept_no);
