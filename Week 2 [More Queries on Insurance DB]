@@ -1,1 +1,33 @@
+select * from car
+order by year asc;
 
+select count (report num) as model_count
+from cae c, participated p
+where c.reg_num = p.reg_num and model='Lancer';
+
+select count (driver id) as people_count
+from particpated p, accident a
+where p.report_num = a.report_num and a.accident_date like '2008%';
+
+select count (driver id) as people_count_04
+from participated p, accident a
+where p.report_num = a.report_num and a.accident_date like '2004%';
+
+select * from participated 
+order by damage_amount desc;
+
+select avg(damage_amount) avg_damage_amount
+from participated;
+
+create table participated_clone like participated;
+insert into participated_clone select * from participated;
+delete from participated
+where damage_amount < (select avg(damage_amount) from participated_clone);
+select * from participated;
+
+select name
+from person p1, participated_clone p2
+where p1.driver_id = p2.driver_id and damage_amount > (select avg(damage_amount) from participated_clone;
+
+select max(damage_amount) max_damage 
+from participated_clone;
