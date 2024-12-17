@@ -1,4 +1,4 @@
-Create table
+Create table:
 
 db.createCollection("Student");
 show dbs
@@ -12,6 +12,6 @@ db.Student.insert({RollNo:10,Age:23,Cont:2276,email:"rekha.de9@gmail.com"});
 db.Student.insert({RollNo:11,Age:22,Name:"ABC",Cont:2276,email:"rea.de9@gmail.
 com"});
 
-View the data
+View the data:
 
 db.Student.find()
