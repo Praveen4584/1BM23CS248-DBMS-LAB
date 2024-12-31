@@ -1,0 +1,100 @@
+create database railway_reservation_system;
+use railway_reservation_system;
+
+CREATE TABLE trains (
+    train_no INT PRIMARY KEY,
+    date DATE,
+    from_station VARCHAR(50),
+    to_station VARCHAR(50),
+    departure_time TIME,
+    gen_availability INT,
+    sleeper_availability INT,
+    ac_availability INT);
+
+CREATE TABLE stations (
+    train_no INT,
+    station_name VARCHAR(50),
+    FOREIGN KEY (train_no) REFERENCES trains(train_no));
+
+CREATE TABLE tickets (
+    ticket_id INT PRIMARY KEY,
+    train_no INT,
+    amount DECIMAL(10, 2),
+    date DATE,
+    from_station VARCHAR(50),
+    to_station VARCHAR(50),
+    status VARCHAR(20),
+    seat_type VARCHAR(20),
+    FOREIGN KEY (train_no) REFERENCES trains(train_no));
+
+CREATE TABLE users (
+    name VARCHAR(100),
+    mobile_no VARCHAR(15),
+    ticket_id INT,
+    FOREIGN KEY (ticket_id) REFERENCES tickets(ticket_id));
+
+INSERT INTO trains (train_no, date, from_station, to_station, departure_time, gen_availability, sleeper_availability, ac_availability) 
+VALUES 
+(101, '2024-01-10', 'Bangalore', 'Mumbai', '18:00:00', 100, 50, 30),
+(102, '2024-01-12', 'Chennai', 'Delhi', '09:30:00', 150, 70, 40),
+(103, '2024-02-15', 'Hyderabad', 'Pune', '15:00:00', 120, 60, 35),
+(104, '2024-03-05', 'Kolkata', 'Ahmedabad', '11:00:00', 90, 40, 25),
+(105, '2024-04-10', 'Lucknow', 'Bhopal', '07:30:00', 200, 100, 50);
+
+INSERT INTO stations (train_no, station_name) 
+VALUES 
+(101, 'Bangalore Junction'),
+(102, 'Mumbai Central'),
+(103, 'Chennai Central'),
+(104, 'Delhi Junction'),
+(105, 'Hyderabad Deccan');
+
+INSERT INTO tickets (ticket_id, train_no, amount, date, from_station, to_station, status, seat_type) 
+VALUES 
+(1, 101, 500.00, '2024-01-08', 'Bangalore', 'Mumbai', 'Booked', 'Sleeper'),
+(2, 102, 700.00, '2024-01-10', 'Chennai', 'Delhi', 'Booked', 'AC'),
+(3, 103, 400.00, '2024-02-12', 'Hyderabad', 'Pune', 'Booked', 'General'),
+(4, 104, 600.00, '2024-02-20', 'Kolkata', 'Ahmedabad', 'Available', 'Sleeper'),
+(5, 105, 450.00, '2024-03-25', 'Lucknow', 'Bhopal', 'Booked', 'AC');
+
+INSERT INTO users (name, mobile_no, ticket_id) 
+VALUES 
+('raja', '9876543210', 1),
+('rohan', '9123456789', 2),
+('rohit', '9345678901', 3),
+('rani', '9765432109', 4),
+('ramu', '9898765432', 5);
+
+SELECT * FROM trains;
+SELECT * FROM stations;
+SELECT * FROM tickets;
+SELECT * FROM users;
+
+SELECT 
+    t.train_no,
+    t.from_station,
+    t.to_station,
+    t.departure_time,
+    t.gen_availability + t.sleeper_availability + t.ac_availability AS total_seats,
+    COUNT(s.station_name) AS station_no,
+    SUM(ticket.amount) AS total_amount
+FROM trains t
+JOIN stations s ON t.train_no = s.train_no
+JOIN tickets ticket ON t.train_no = ticket.train_no
+GROUP BY t.train_no, t.from_station, t.to_station, t.departure_time;
+
+CREATE VIEW Train AS
+SELECT 
+    t.train_no,
+    t.from_station,
+    t.to_station,
+    t.departure_time,
+    s.station_name
+FROM trains t
+JOIN stations s ON t.train_no = s.train_no;
+SELECT * FROM Train;
+
+UPDATE tickets 
+SET amount = amount * 1.20 
+WHERE train_no = 101 AND from_station = 'Bangalore' AND to_station = 'Mumbai';
+SELECT * FROM tickets;
